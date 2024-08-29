@@ -123,7 +123,7 @@ pattern = re.compile(r'cpac_sub-(?P<sub>[^/]+)_ses-(?P<ses>[^/]+).*/nuisance_reg
 args_list = []
 num_cores = multiprocessing.cpu_count()
 # Set the number of processes to the number of CPU cores or a reasonable value
-num_processes = min(100, num_cores) 
+num_processes = min(20, num_cores) 
 
 
 

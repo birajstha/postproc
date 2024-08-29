@@ -1,6 +1,9 @@
 
 
 import os
+import subprocess
+import nibabel as nib
+
 
 
 def resample(input_ts, output_ts):
@@ -14,8 +17,7 @@ def resample(input_ts, output_ts):
 def overwrite(input_ts, output_ts):
     cmd_overwrite = ["mv", input_ts, output_ts]
     subprocess.run(cmd_overwrite, check=True)
-    cmd_remove = ["rm", input_ts]
-    subprocess.run(cmd_remove, check=True) 
+
 
 def update_pixel_dim(file_path, new_pixdim4):
     # Update pixdim[4] field
