@@ -35,7 +35,7 @@ def update_pixel_dim(file_path, new_pixdim4):
     nib.save(updated_nii, file_path)
 
 def run_3dTproject(input_ts, output_ts, mask_file):
-   cmd_3dTproject = ["3dTproject",
+    cmd_3dTproject = ["3dTproject",
                 "-input", input_ts,
                 "-mask", mask_file, 
                 "-polort", 2,
