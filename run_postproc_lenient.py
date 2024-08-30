@@ -26,7 +26,7 @@ spike regression operations - grabbing the regressor, running that inverting fun
            
 def run(sub, ses, scan, reg, file_path):
 
-
+    strategy = 'lenient'
     # # # Invert the 1's and 0's in the TSV
     df = pd.read_csv(file_path, header=None)
     df = df.apply(pd.to_numeric, errors='coerce')  # Convert to numeric, setting non-numeric to NaN
@@ -34,7 +34,7 @@ def run(sub, ses, scan, reg, file_path):
     df = 1 - df
 
     # Construct new file path
-    new_path = os.path.join(os.getcwd(), 'TSVs_strict')
+    new_path = os.path.join(os.getcwd(), f'TSVs_{strategy}')
     new_file = f'spikes_sub-{sub}_ses-{ses}_scan-{scan}_reg-{reg}.tsv'
     new_file_path = os.path.join(new_path, new_file)
 
@@ -44,7 +44,6 @@ def run(sub, ses, scan, reg, file_path):
     # # Write the inverted data to the new file
     df.to_csv(new_file_path, header=None, index=False, sep='\t')
 
-    strategy = 'strict'
     timeseries_path = f"/ocean/projects/med220004p/bshresth/vannucci/all_runs/scripts/outputs/ANTS_FSL_noBBR_{strategy}/output/pipeline_cpac_fmriprep-options/sub-{sub}/ses-{ses}/func"
 
     ############################################################
@@ -83,7 +82,7 @@ def run(sub, ses, scan, reg, file_path):
     try:
         timeseries_name = glob.glob(f"{timeseries_path}/sub-{sub}_ses-{ses}_task-{scan}_space-MNI152NLin2009cAsym_reg-{reg}_desc-preproc*_bold.nii.gz")[0].split("/")[-1]
         print(f"timeseries : {timeseries_name}")
-        mask_file = glob.glob(f"/ocean/projects/med220004p/bshresth/vannucci/all_runs/scripts/outputs/ANTS_FSL_noBBR_{strategy}/working/pipeline_cpac_fmriprep-options/cpac_pipeline_cpac_fmriprep-options_sub-{sub}_ses-{ses}/_scan_{scan}/align_template_mask_to_template_data_space-template_reg-strict_{reg}_*/tpl-MNI152NLin2009cAsym_res-02_desc-brain_mask_resample_resample.nii.gz")[0]
+        mask_file = glob.glob(f"/ocean/projects/med220004p/bshresth/vannucci/all_runs/scripts/outputs/ANTS_FSL_noBBR_{strategy}/working/pipeline_cpac_fmriprep-options/cpac_pipeline_cpac_fmriprep-options_sub-{sub}_ses-{ses}/_scan_{scan}/align_template_mask_to_template_data_space-template_reg-{strategy}_{reg}_*/tpl-MNI152NLin2009cAsym_res-02_desc-brain_mask_resample_resample.nii.gz")[0]
         print(f"mask : {mask_file}")
         
         #rename the timeseries name to old_timeseries_name
@@ -118,7 +117,7 @@ def run(sub, ses, scan, reg, file_path):
 home_dir = '/ocean/projects/med220004p/bshresth/vannucci/all_runs/scripts/outputs/old_outputs/ANTS_FSL_noBBR_strict/working/pipeline_cpac_fmriprep-options'
 
 # Regex pattern to extract identifiers
-pattern = re.compile(r'cpac_sub-(?P<sub>[^/]+)_ses-(?P<ses>[^/]+).*/nuisance_regression_space-template_res-derivative_reg-strict_(?P<reg>[^/]+)_[^/]+/_scan_(?P<scan>[^/]+)/find_offending_time_points/censors.tsv')
+pattern = re.compile(r'cpac_sub-(?P<sub>[^/]+)_ses-(?P<ses>[^/]+).*/nuisance_regression_space-template_res-derivative_reg-lenient_(?P<reg>[^/]+)_[^/]+/_scan_(?P<scan>[^/]+)/find_offending_time_points/censors.tsv')
 
 args_list = []
 num_cores = multiprocessing.cpu_count()
