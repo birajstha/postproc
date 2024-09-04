@@ -5,7 +5,7 @@ import os
 from utils import run_3dTproject, overwrite, check_orientation, resample
 
 #load processed_files.csv if exists or set set()
-processed_files = pd.read_csv("processed_files.csv")["file_path"].to_set() if os.path.exists("processed_files.csv") else set()
+processed_files = set(pd.read_csv("processed_files.csv")["file_path"]) if os.path.exists("processed_files.csv") else set()
 
 strategy = "strict"  # Define your strategy variable
 
@@ -16,6 +16,7 @@ def process_file(sub, ses, scan, reg, censor):
         return
     file = file[0]
     if file in processed_files:
+        print(f"File already processed \t {file}")
         return
     
     mask_file = glob.glob(f"/ocean/projects/med220004p/bshresth/vannucci/all_runs/scripts/outputs/ANTS_FSL_noBBR_{strategy}/working/pipeline_cpac_fmriprep-options/cpac_pipeline_cpac_fmriprep-options_sub-{sub}_ses-{ses}/_scan_{scan}/align_template_mask_to_template_data_space-template_reg-strict_{reg}_*/tpl-MNI152NLin2009cAsym_res-02_desc-brain_mask_resample_resample.nii.gz")
@@ -30,7 +31,12 @@ def process_file(sub, ses, scan, reg, censor):
         resampled_mask_file = mask_file.replace(".nii.gz", "_resample.nii.gz")
         resample(mask_file, resampled_mask_file)
         overwrite(keep_ts=resampled_mask_file, overwrite_ts=mask_file)
-    run_3dTproject(input_ts=file, output_ts=output_ts, mask_file=mask_file)
+    try:
+        run_3dTproject(input_ts=file, output_ts=output_ts, mask_file=mask_file)
+    except Exception as e:
+        print(f"Error processing file: {file}")
+        print(e)
+        return
     overwrite(keep_ts=output_ts, overwrite_ts=file)
     processed_files.add(file)
     print(f"Finished processing file: {file}")
