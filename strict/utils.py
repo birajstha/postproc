@@ -43,7 +43,7 @@ def run_3dTproject(input_ts, output_ts, mask_file):
     cmd_3dTproject = ["3dTproject",
                 "-input", input_ts,
                 "-mask", mask_file, 
-                "-polort", 2,
+                "-polort", "2",
                 "-prefix", output_ts]
     subprocess.run(cmd_3dTproject, check=True)
 
