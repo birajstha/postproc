@@ -19,6 +19,8 @@ def process_file(sub, ses, scan, reg, censor):
         print(f"File already processed \t {file}")
         return
     
+    tsv = os.path.join(f'/ocean/projects/med220004p/bshresth/vannucci/all_runs/scripts/post_proc/TSVs_{strategy}',f'spikes_sub-{sub}_ses-{ses}_scan-{scan}_reg-{reg}.tsv')
+    
     mask_file = glob.glob(f"/ocean/projects/med220004p/bshresth/vannucci/all_runs/scripts/outputs/ANTS_FSL_noBBR_{strategy}/working/pipeline_cpac_fmriprep-options/cpac_pipeline_cpac_fmriprep-options_sub-{sub}_ses-{ses}/_scan_{scan}/align_template_mask_to_template_data_space-template_reg-strict_{reg}_*/tpl-MNI152NLin2009cAsym_res-02_desc-brain_mask_resample_resample.nii.gz")
     mask_file = mask_file[0] if mask_file else None
 
@@ -27,12 +29,24 @@ def process_file(sub, ses, scan, reg, censor):
     # print(f"Processing file: {file}")
     # print(f"Output file: {output_ts}")
     # print(f"Mask file: {mask_file}")
-    if check_orientation(mask_file).strip() != "RPI":
-        resampled_mask_file = mask_file.replace(".nii.gz", "_resample.nii.gz")
-        resample(mask_file, resampled_mask_file)
-        overwrite(keep_ts=resampled_mask_file, overwrite_ts=mask_file)
+    print(sub)
     try:
-        run_3dTproject(input_ts=file, output_ts=output_ts, mask_file=mask_file)
+        if check_orientation(mask_file).strip() != "RPI":
+            resampled_mask_file = mask_file.replace(".nii.gz", "_resample.nii.gz")
+            resample(mask_file, resampled_mask_file)
+            overwrite(keep_ts=resampled_mask_file, overwrite_ts=mask_file)
+            print(f"Mask Resampled to RPI")
+            
+        else: 
+            print("Mask Already in RPI")
+            
+    except Exception as e:
+        print(f"Error processing file: {mask_file}")
+        print(e)
+        return
+
+    try:
+        run_3dTproject(input_ts=file, output_ts=output_ts, mask_file=mask_file, tsv_file=tsv)
     except Exception as e:
         print(f"Error processing file: {file}")
         print(e)

@@ -6,9 +6,9 @@ import nibabel as nib
 
 
 
-def resample(input_ts, output_ts):
+def resample(input_ts, output_ts, orientation="RPI"):
     cmd_resample = ["3dresample", 
-        "-orient", "RPI",
+        "-orient", orientation,
         "-prefix", output_ts,
         "-inset", input_ts
     ]
@@ -25,24 +25,29 @@ def find_pixel_dim(file_path):
     return pixdim[3]
 
 def update_pixel_dim(file_path, new_pixdim4):
-    # Update pixdim[4] field
-    nii = nib.load(file_path)
-    header = nii.header
-    pixdim = header.get_zooms()
-    new_pixdim = pixdim[:3] + (new_pixdim4,)
+    # Ensure the file exists
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(f"File not found: {file_path}")
+    
+    # Print the current pixdim[4] value for verification
+    print(f'Updating {file_path} with new pixdim[4] value: {new_pixdim4}')
 
-    # Create a new NIfTI image with the updated header
-    new_header = header.copy()
-    new_header.set_zooms(new_pixdim)
-    updated_nii = nib.Nifti1Image(nii.get_fdata(), nii.affine, new_header)
+    # Construct the command to update the pixdim[4] value using 3drefit
+    command = ['3drefit', '-TR', str(new_pixdim4), file_path]
+    
+    # Execute the command
+    try:
+        subprocess.run(command, check=True)
+        print(f'Successfully updated TR to {new_pixdim4} seconds.')
+    except subprocess.CalledProcessError as e:
+        print(f'Error occurred while updating the file: {e}')
+        
 
-    # Save the updated image back to the file
-    nib.save(updated_nii, file_path)
-
-def run_3dTproject(input_ts, output_ts, mask_file):
+def run_3dTproject(input_ts, output_ts, mask_file, tsv_file):
     cmd_3dTproject = ["3dTproject",
                 "-input", input_ts,
-                "-mask", mask_file, 
+                "-mask", mask_file,
+                "-ort", tsv_file,
                 "-polort", "2",
                 "-prefix", output_ts]
     subprocess.run(cmd_3dTproject, check=True)
