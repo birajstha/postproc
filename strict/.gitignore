@@ -1,2 +1,7 @@
+orientation_log.csv
+orientation_log_after.csv
+
+tr_correction_log.csv
+tr_correction_log_after.csv
 
 *.out
