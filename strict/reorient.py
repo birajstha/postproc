@@ -27,7 +27,7 @@ def process_row(row):
     return row.name  # Return the index to update the status later
 
 def thread_worker(rows):
-    with mp.Pool(mp.cpu_count()) as pool:
+    with mp.Pool(min(mp.cpu_count(),10)) as pool:
         indices = list(tqdm(pool.imap(process_row, [row for _, row in rows.iterrows()]), total=len(rows)))
     return indices
 

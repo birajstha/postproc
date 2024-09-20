@@ -8,7 +8,7 @@ import os
 log = pd.read_csv('tr_correction_log.csv')
 
 
-needs_tr_correction = log[log['Status'] == 'needs updating']
+needs_tr_correction = log[log['Status'].str.contains('needs updating')]
 print(f"Number of files that need tr correction: {len(needs_tr_correction)}")
 def process_row(row):
     print(f"correcting : {row['File Name']}")
