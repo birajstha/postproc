@@ -32,7 +32,7 @@ def thread_worker(rows):
     return indices
 
 # Create a thread pool
-num_threads = 10  # Adjust based on the cluster's capabilities
+num_threads = 2  # Adjust based on the cluster's capabilities
 with ThreadPool(num_threads) as pool:
     chunk_size = len(needs_reorient) // num_threads
     chunks = [needs_reorient.iloc[i:i + chunk_size] for i in range(0, len(needs_reorient), chunk_size)]

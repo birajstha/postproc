@@ -5,3 +5,5 @@ tr_correction_log.csv
 tr_correction_log_after.csv
 
 *.out
+*.nii.gz
+*.nii
