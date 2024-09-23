@@ -8,10 +8,10 @@ from colorama import Fore, Style, init
 
 init(autoreset=True)
 
-output_dir = '/ocean/projects/med220004p/bshresth/vannucci/all_runs/scripts/outputs/ANTS_FSL_noBBR_strict/output/pipeline_cpac_fmriprep-options'
+output_dir = '/ocean/projects/med220004p/bshresth/vannucci/all_runs/scripts/outputs/ANTS_FSL_noBBR_lenient/output/pipeline_cpac_fmriprep-options'
 
-# Load strict.csv
-df = pd.read_csv('strict.csv')
+# Load .csv
+df = pd.read_csv('lenient.csv')
 
 # Get unique sub ses scan
 subs = df['sub'].unique()
