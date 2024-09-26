@@ -8,7 +8,7 @@ from colorama import init, Fore, Style
 
 init(autoreset=True)
 
-output_dir = '/ocean/projects/med220004p/bshresth/vannucci/all_runs/scripts/outputs/ANTS_FSL_noBBR_lenient/output/pipeline_cpac_fmriprep-options'
+output_dir = '/ocean/projects/med220004p/trogers1/vannucci/all_runs/scripts/outputs/ANTS_FSL_noBBR_lenient/output/pipeline_cpac_fmriprep-options'
 
 # Load .csv
 df = pd.read_csv('lenient.csv')
