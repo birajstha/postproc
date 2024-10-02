@@ -35,7 +35,7 @@ def run(args):
         os.makedirs(new_path, exist_ok=True)
         new_file = f'spikes_sub-{sub}_ses-{ses}_scan-{scan}.tsv'
         new_file_path = os.path.join(new_path, new_file)
-        inverted_threshold_df.to_csv(new_file_path, header=None, index=False, sep='\t')
+        threshold_df.to_csv(new_file_path, header=["spike"], index=False, sep='\t')
         
         #construct new file path for qc_df
         new_path_qc = os.path.join(os.getcwd(), 'TSVs_lenient', 'qc')
